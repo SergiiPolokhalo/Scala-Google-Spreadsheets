@@ -9,6 +9,24 @@ import scala.util.{Failure, Success, Try}
 
 object ArtificierToolset {
   /**
+   * Create wondrous item by base price
+   */
+  @JSExportTopLevel("WONDROUS")
+  def wondrous(total:Int): js.Array[js.Array[Data]] = {
+    val cl = 0
+    val artTotal = total * 0.75
+    val locTotal = artTotal * 0.7
+    report (
+      Vector(
+        ReportRow(total, 0, 0, 0),
+        ReportRow(total / 2, atLeastOne(total, 25), atLeastOne(total, 1000), cl, "simple"),
+        ReportRow(artTotal / 2, atLeastOne(artTotal, 25), atLeastOne(artTotal, 1000), cl, "feats"),
+        ReportRow(locTotal / 2, atLeastOne(locTotal, 25), atLeastOne(locTotal, 1000), cl, "restricted")
+      )
+    )
+  }
+
+  /**
    * Create Artificer Scroll
    *
    * @param spellLevel  {spellLevel} spell level
@@ -51,16 +69,6 @@ object ArtificierToolset {
   }
 
   def count(costFactor: Int, spellLevel: Int, casterLevel: Int, spellCost: Int, spellXpCost: Int, charges: Int): Vector[ReportRow] = {
-    def atLeastOne(v: Double, w: Double) = Try {
-      Math.round(v / w)
-    } match {
-      case Failure(_) => 1
-      case Success(value) => value match {
-        case n if n <= 0 => 1
-        case n => n.toInt
-      }
-    }
-
     val sl = zeroSpellFix(spellLevel)
     val cl = Math.max(casterLevel, minimalCasterLevel(sl)).toInt
     val oneShoot = costFactor * sl * cl + spellCost + 5 * spellXpCost
@@ -73,6 +81,16 @@ object ArtificierToolset {
       ReportRow(artTotal / 2, atLeastOne(artTotal, 25), atLeastOne(artTotal, 1000), cl, "feats"),
       ReportRow(locTotal / 2, atLeastOne(locTotal, 25), atLeastOne(locTotal, 1000), cl, "restricted")
     )
+  }
+
+  def atLeastOne(v: Double, w: Double): Int = Try {
+    v / w
+  } match {
+    case Failure(_) => 1
+    case Success(value) => value match {
+      case n if n <= 0 => 1
+      case n =>Math.round(n+0.5).toInt
+    }
   }
 
   def zeroSpellFix(spellLevel: Int): Double = Math.max(spellLevel, 0.5)
