@@ -1,4 +1,6 @@
-package dnd
+package dnd.craft
+
+import dnd.craft
 
 trait CraftMath {
   val oneOrMore: Double => Int = {
@@ -107,8 +109,8 @@ case class Wondrous(cost:Int, name:String) extends CraftMath {
 object ArtificerBuilder {
   private val holder = scala.collection.mutable.Map[(Int,Int,Int,Int,Int,String),CraftMath]()
 
-  def getOrBuildScroll(sl: Int, cl: Int, cost: Int, xp: Int, shots: Int): Scroll = {
-    holder.getOrElseUpdate((sl,cl,cost,xp,shots,"S"), Scroll(sl,cl,cost,xp,shots)).asInstanceOf[Scroll]
+  def getOrBuildScroll(sl: Int, cl: Int, cost: Int, xp: Int, shots: Int): craft.Scroll = {
+    holder.getOrElseUpdate((sl,cl,cost,xp,shots,"S"), Scroll(sl,cl,cost,xp,shots)).asInstanceOf[craft.Scroll]
   }
 
   def scroll(sl: Int,
@@ -116,10 +118,10 @@ object ArtificerBuilder {
              cost: Int,
              xp: Int,
              shots: Int
-            ):Scroll =   getOrBuildScroll(sl,cl,cost,xp,shots)
+            ):craft.Scroll =   getOrBuildScroll(sl,cl,cost,xp,shots)
 
-  def getOrBuildWand(sl: Int, cl: Int, cost: Int, xp: Int, shots: Int): Wand = {
-    holder.getOrElseUpdate((sl,cl,cost,xp,shots,"W"), Wand(sl,cl,cost,xp,shots)).asInstanceOf[Wand]
+  def getOrBuildWand(sl: Int, cl: Int, cost: Int, xp: Int, shots: Int): craft.Wand = {
+    holder.getOrElseUpdate((sl,cl,cost,xp,shots,"W"), Wand(sl,cl,cost,xp,shots)).asInstanceOf[craft.Wand]
   }
 
   def wand(sl: Int,
@@ -127,7 +129,7 @@ object ArtificerBuilder {
            cost: Int,
            xp: Int,
            shots: Int
-          ):Wand =  getOrBuildWand(sl,cl,cost,xp,shots)
+          ):craft.Wand =  getOrBuildWand(sl,cl,cost,xp,shots)
 
   def main(args: Array[String]): Unit = {
     val w1 = wand(1,1,0,0,50)
